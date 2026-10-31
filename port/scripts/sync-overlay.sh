@@ -19,6 +19,40 @@ mkdir -p "$TREE/package/tyfza1-pon-control"
 rsync -a --delete "$PORT/packages/tyfza1-pon-control/" "$TREE/package/tyfza1-pon-control/"
 mkdir -p "$TREE/package/tyfza1-storage"
 rsync -a --delete "$PORT/packages/tyfza1-storage/" "$TREE/package/tyfza1-storage/"
+
+# ── TYFZA1 PonWRT feature packages ────────────────────────────────────────
+# rtp2httpd — multicast RTP/RTSP → HTTP, IPTV delivery engine
+mkdir -p "$TREE/package/rtp2httpd"
+rsync -a --delete "$PORT/packages/rtp2httpd/" "$TREE/package/rtp2httpd/"
+mkdir -p "$TREE/package/luci-app-rtp2httpd"
+rsync -a --delete "$PORT/packages/luci-app-rtp2httpd/" "$TREE/package/luci-app-rtp2httpd/"
+
+# HomeProxy — immortalwrt/homeproxy, sing-box backend
+mkdir -p "$TREE/package/luci-app-homeproxy"
+rsync -a --delete "$PORT/packages/homeproxy/" "$TREE/package/luci-app-homeproxy/"
+
+# luci-app-mesh — xxosdev/luci-app-mesh, IEEE 802.11s + batman-adv
+mkdir -p "$TREE/package/luci-app-mesh"
+rsync -a --delete "$PORT/packages/luci-app-mesh/" "$TREE/package/luci-app-mesh/"
+
+# FileBrowser — prebuilt arm64 v2.43.0
+mkdir -p "$TREE/package/filebrowser"
+rsync -a --delete "$PORT/packages/filebrowser/" "$TREE/package/filebrowser/"
+mkdir -p "$TREE/package/luci-app-filebrowser"
+rsync -a --delete "$PORT/packages/luci-app-filebrowser/" "$TREE/package/luci-app-filebrowser/"
+
+# EasyTier — mesh VPN, prebuilt aarch64 v2.7.0
+mkdir -p "$TREE/package/easytier"
+rsync -a --delete "$PORT/packages/easytier/" "$TREE/package/easytier/"
+mkdir -p "$TREE/package/luci-app-easytier"
+rsync -a --delete "$PORT/packages/luci-app-easytier/" "$TREE/package/luci-app-easytier/"
+# Both EasyTier packages include ../version.mk; put the single source next to them.
+cp "$PORT/packages/version.mk" "$TREE/package/version.mk"
+
+# luci-app-syncthing — immortalwrt LuCI frontend for syncthing
+mkdir -p "$TREE/package/luci-app-syncthing"
+rsync -a --delete "$PORT/packages/luci-app-syncthing/" "$TREE/package/luci-app-syncthing/"
+
 # hostapd patches apply to its unpacked source, not the OpenWrt tree root.
 cp "$PORT/host-patches/471-hostapd-acs-no-survey.patch" \
     "$TREE/package/network/services/hostapd/patches/471-hostapd-acs-no-survey.patch"

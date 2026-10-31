@@ -1,3 +1,33 @@
+## v0.9.0-beta
+
+### 新增预装功能
+
+固件默认集成以下软件包，全部随系统启动即用：
+
+| 功能 | 包名 | 用途 |
+| --- | --- | --- |
+| HomeProxy | `luci-app-homeproxy` | 科学上网代理平台，sing-box 后端 |
+| frpc | `frpc` `luci-app-frpc` | FRP 内网穿透客户端 |
+| FileBrowser | `filebrowser` `luci-app-filebrowser` | Web 文件管理器 |
+| rtp2httpd | `rtp2httpd` `luci-app-rtp2httpd` | 组播 RTP/RTSP → HTTP 流媒体服务（IPTV播放器） |
+| Syncthing | `syncthing` `luci-app-syncthing` | P2P 文件同步 |
+| Samba4 | `samba4-server` `luci-app-samba4` | Windows 文件共享 |
+| EasyTier | `easytier` `luci-app-easytier` | 去中心化 Mesh VPN |
+| Mesh 组网 | `luci-app-mesh` | IEEE 802.11s / batman-adv 无线组网管理 |
+
+### 变更
+
+- 新增 rtp2httpd IPTV 流媒体服务，Web 播放器标题"IPTV播放器"
+- 新增 HomeProxy 代理平台（sing-box v1.14.0 后端）
+- 新增 FRP 内网穿透（frpc v0.71.0）
+- 新增 FileBrowser 文件管理器（v2.43.0，预编译 arm64）
+- 新增 Syncthing P2P 文件同步（v2.1.3）
+- 新增 Samba4 Windows 文件共享（v4.24.5）
+- 新增 EasyTier Mesh VPN（v2.7.0，预编译 aarch64）
+- 新增 Mesh 组网管理界面（batman-adv + 802.11k/v 漫游引导）
+- 新增 ucode-mod-digest 模块支持（HomeProxy 依赖）
+- 更新预装依赖配置，涵盖所有新增功能的运行时依赖
+
 ## v0.8.4-beta
 
 - 修复硬件流量卸载时可能触发的内核崩溃和自动重启。
