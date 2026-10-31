@@ -27,7 +27,7 @@ LUCI_PKGARCH:=all
 LUCI_DEPENDS:=+uclient-fetch +rpcd +jsonfilter +iwinfo +iw \
 	+wpad-mbedtls \
 	+kmod-batman-adv +batctl-default +luci-proto-batman-adv \
-	+dawn +umdns
+	+dawn
 
 PKG_INSTALL:=$(CURDIR)/root
 
