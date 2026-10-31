@@ -24,9 +24,9 @@ LUCI_PKGARCH:=all
 # wpad-mbedtls is the full supplicant variant already in tyfza1-boot.config;
 # it compiles with CONFIG_MESH=y and provides mesh point support.
 # kmod-batman-adv + batctl are from the openwrt packages feed (external kmod).
-LUCI_DEPENDS:=+uclient-fetch +rpcd +curl +jsonfilter +iwinfo +iw \
+LUCI_DEPENDS:=+uclient-fetch +rpcd +jsonfilter +iwinfo +iw \
 	+wpad-mbedtls \
-	+kmod-batman-adv +batctl +luci-proto-batman-adv \
+	+kmod-batman-adv +batctl-default +luci-proto-batman-adv \
 	+dawn +umdns
 
 PKG_INSTALL:=$(CURDIR)/root
