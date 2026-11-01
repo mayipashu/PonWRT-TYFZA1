@@ -34,13 +34,8 @@ define Package/rtp2httpd/description
 endef
 
 CMAKE_OPTIONS += \
-	-DENABLE_AGGRESSIVE_OPT=ON
-
-# musl libc has clock_gettime built in; linking -lrt fails on OpenWrt toolchains.
-define Build/Prepare
-	$(call Build/Prepare/Default)
-	sed -i '/target_link_libraries(rtp2httpd PRIVATE rt)/d' $(PKG_BUILD_DIR)/CMakeLists.txt
-endef
+	-DENABLE_AGGRESSIVE_OPT=ON \
+	-DLINK_RT=OFF
 
 define Package/rtp2httpd/conffiles
 /etc/config/rtp2httpd
