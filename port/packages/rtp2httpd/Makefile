@@ -16,7 +16,6 @@ PKG_HASH:=9d6e524f427813f91f4badf8d3c2b07138533c9805b1cd598d3530e0fa42daaa
 PKG_FIXUP:=cmake
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
 
 define Package/rtp2httpd
   SECTION:=net
