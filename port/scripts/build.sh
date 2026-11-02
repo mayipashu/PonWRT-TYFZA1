@@ -66,4 +66,13 @@ else
         --stock "${TYFZA1_STOCK_INPUTS:-$PROJECT/analysis/private/live-files}"
     python3 "$PROJECT/tools/prepare_wifi_runtime.py" "$TREE/files" --openwrt-tree "$TREE"
 fi
-make -j"$JOBS" world
+# The world target hides per-package output in the default V=w mode, which
+# makes a single broken package look like a silent failure.  On failure,
+# rebuild the rtp2httpd package alone with full verbosity so the real error
+# is always visible in the build log.
+if ! make -j"$JOBS" world; then
+    echo "=== world build failed; retrying package/rtp2httpd verbosely ==="
+    make -j1 V=s package/rtp2httpd/compile 2>&1 | tail -120 || true
+    echo "=== end of rtp2httpd verbose log ==="
+    exit 1
+fi

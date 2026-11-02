@@ -9,9 +9,16 @@ PKG_LICENSE_FILES:=LICENSE
 
 # PonWRT fork: player UI branded IPTV播放器; source pinned to the fork commit
 # carrying the regenerated embedded web UI (see sources.lock.json).
+PKG_SOURCE_REF:=d7cc99a
 PKG_SOURCE:=rtp2httpd-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/mayipashu/rtp2httpd/tar.gz/d7cc99a?
+PKG_SOURCE_URL:=https://codeload.github.com/mayipashu/rtp2httpd/tar.gz/$(PKG_SOURCE_REF)?
 PKG_HASH:=9d6e524f427813f91f4badf8d3c2b07138533c9805b1cd598d3530e0fa42daaa
+
+# codeload commit archives extract into <repo>-<ref>/ while OpenWrt's default
+# unpack (TAR_OPTIONS=-xf -) keeps that top-level directory.  Point the build
+# directory at the directory that actually gets extracted, otherwise all
+# $(PKG_BUILD_DIR)/... paths are empty and the build dies without output.
+PKG_BUILD_DIR:=$(BUILD_DIR)/rtp2httpd-$(PKG_SOURCE_REF)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -31,6 +38,9 @@ define Package/rtp2httpd/description
 endef
 
 define Build/Compile
+	@test -d $(PKG_BUILD_DIR)/src || { \
+		echo "ERROR: rtp2httpd sources not unpacked into $(PKG_BUILD_DIR)" >&2; \
+		exit 1; }
 	mkdir -p $(PKG_INSTALL_DIR)/usr/bin
 	$(TARGET_CC) $(TARGET_CFLAGS) -std=c11 -D_GNU_SOURCE \
 		-DSYSCONFDIR='"/etc"' -DPACKAGE='"rtp2httpd"' -DVERSION='"$(PKG_VERSION)"' \
