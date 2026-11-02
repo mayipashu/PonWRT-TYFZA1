@@ -37,20 +37,63 @@ define Package/rtp2httpd/description
   incoming RTP data to HTTP stream.
 endef
 
+# Source list mirrors CMakeLists.txt COMMON_SOURCES plus the Linux poller.
+# It is spelled out on purpose: $(wildcard) is expanded while this Makefile is
+# parsed, i.e. before Build/Prepare has unpacked the archive, so a wildcard
+# based list is permanently baked as empty and the first build of a fresh tree
+# dies with "no input files".
+RTP2HTTPD_SOURCES := \
+	src/rtp2httpd.c \
+	src/supervisor.c \
+	src/pid_file.c \
+	src/configuration.c \
+	src/access_log.c \
+	src/http.c \
+	src/http_headers.c \
+	src/http_fetch.c \
+	src/service.c \
+	src/url_template.c \
+	src/rtp.c \
+	src/rtp_reorder.c \
+	src/rtp_fec.c \
+	src/rs_fec.c \
+	src/multicast.c \
+	src/fcc.c \
+	src/fcc_telecom.c \
+	src/fcc_huawei.c \
+	src/stream.c \
+	src/rtsp.c \
+	src/http_chunked_decoder.c \
+	src/http_proxy.c \
+	src/http_proxy_rewrite.c \
+	src/stun.c \
+	src/snapshot.c \
+	src/timezone.c \
+	src/status.c \
+	src/connection.c \
+	src/worker.c \
+	src/unix_socket.c \
+	src/buffer_pool.c \
+	src/send_queue.c \
+	src/m3u.c \
+	src/epg.c \
+	src/embedded_web.c \
+	src/utils.c \
+	src/poller_epoll.c \
+	src/vendor/hashmap/hashmap.c \
+	src/vendor/md5/md5.c \
+	src/vendor/picohttpparser/picohttpparser.c
+
 define Build/Compile
-	@test -d $(PKG_BUILD_DIR)/src || { \
+	@test -f $(PKG_BUILD_DIR)/src/rtp2httpd.c || { \
 		echo "ERROR: rtp2httpd sources not unpacked into $(PKG_BUILD_DIR)" >&2; \
 		exit 1; }
 	mkdir -p $(PKG_INSTALL_DIR)/usr/bin
-	$(TARGET_CC) $(TARGET_CFLAGS) -std=c11 -D_GNU_SOURCE \
+	cd $(PKG_BUILD_DIR) && $(TARGET_CC) $(TARGET_CFLAGS) -std=c11 -D_GNU_SOURCE \
 		-DSYSCONFDIR='"/etc"' -DPACKAGE='"rtp2httpd"' -DVERSION='"$(PKG_VERSION)"' \
-		-O3 -fstack-protector-strong -D_FORTIFY_SOURCE=2 \
-		-I $(PKG_BUILD_DIR)/src \
-		-o $(PKG_INSTALL_DIR)/usr/bin/rtp2httpd \
-		$(filter-out %/poller_kqueue.c, $(wildcard $(PKG_BUILD_DIR)/src/*.c)) \
-		$(wildcard $(PKG_BUILD_DIR)/src/vendor/hashmap/*.c) \
-		$(wildcard $(PKG_BUILD_DIR)/src/vendor/md5/*.c) \
-		$(wildcard $(PKG_BUILD_DIR)/src/vendor/picohttpparser/*.c) \
+		-O3 -fstack-protector-strong \
+		-I src -o $(PKG_INSTALL_DIR)/usr/bin/rtp2httpd \
+		$(addprefix $(PKG_BUILD_DIR)/,$(RTP2HTTPD_SOURCES)) \
 		-lpthread -lm
 endef
 
