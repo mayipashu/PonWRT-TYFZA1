@@ -16,10 +16,20 @@ define Build/tyfza1-dtb
 	$(CP) $(KDIR)/image-$(1).dtb $@
 endef
 
+# Keep in sync with TYFZA1_ROOT_LIMIT in
+# base-files/lib/upgrade/tyfza1-storage.sh.  The storage planner resizes the
+# root volume on every install/upgrade, so this is a sanity bound rather than
+# the OEM slot size; the device-side check still guarantees a usable
+# rootfs_data volume.
+TYFZA1_ROOTFS_LIMIT := 100663296
+
 define Build/tyfza1-rootfs-size
 	@size="$$(stat -c%s $(IMAGE_ROOTFS))"; \
-	[ "$$size" -le 33648640 ] || { \
-		echo "TYFZA1 rootfs is $$size bytes; OEM rootfs volume holds 33648640 bytes" >&2; \
+	[ "$$size" -le $(TYFZA1_ROOTFS_LIMIT) ] || { \
+		echo "TYFZA1 rootfs is $$size bytes; limit is $(TYFZA1_ROOTFS_LIMIT) bytes" >&2; \
+		echo "Largest files in the root filesystem:" >&2; \
+		find $(TARGET_DIR) -type f -printf '%s %p\n' 2>/dev/null | sort -rn | head -15 | \
+			awk '{ printf "  %8.2f MiB  %s\n", $$1/1048576, $$2 }' >&2; \
 		exit 1; \
 	}
 endef

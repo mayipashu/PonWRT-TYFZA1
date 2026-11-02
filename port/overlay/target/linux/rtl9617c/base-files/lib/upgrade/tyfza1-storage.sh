@@ -1,6 +1,16 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-2.0-only
 
+# Upper bound for the read-only root image and the minimum writable data
+# volume we refuse to go below.  The OEM layout gave each root slot
+# 33648640 bytes, but every upgrade re-plans the storage: rootfs_data is
+# removed, the root volume grows into the freed eraseblocks, and the
+# migration keeps a single slot instead of the OEM A/B pair.  A migrated
+# unit therefore has several times the OEM slot available, so the old
+# 33648640-byte cap rejected images the planner can place perfectly well.
+TYFZA1_ROOT_LIMIT=100663296
+TYFZA1_MIN_DATA=16777216
+
 tyfza1_find_volume() {
 	local path
 	for path in /sys/class/ubi/"$1"_*/name; do
@@ -23,8 +33,8 @@ tyfza1_plan_storage() {
 		ubi_r0:${ubidev}_4|ubi_r1:${ubidev}_7) ;;
 		*) echo "Unexpected TYFZA1 root volume: $rootvol" >&2; return 1 ;;
 	esac
-	[ "$size" -gt 0 ] && [ "$size" -le 33648640 ] || {
-		echo "Root image must fit the 33648640-byte OEM slot limit" >&2
+	[ "$size" -gt 0 ] && [ "$size" -le "$TYFZA1_ROOT_LIMIT" ] || {
+		echo "Root image must fit the $TYFZA1_ROOT_LIMIT-byte root image limit" >&2
 		return 1
 	}
 	free=$(cat "/sys/class/ubi/$ubidev/avail_eraseblocks")
@@ -39,7 +49,7 @@ tyfza1_plan_storage() {
 	fi
 	TYFZA1_ROOT_BYTES=$(( (size + leb - 1) / leb * leb ))
 	TYFZA1_DATA_BYTES=$(( (free + root_ebs + data_ebs) * leb - TYFZA1_ROOT_BYTES ))
-	[ "$TYFZA1_DATA_BYTES" -ge 16777216 ] || {
+	[ "$TYFZA1_DATA_BYTES" -ge "$TYFZA1_MIN_DATA" ] || {
 		echo "Insufficient UBI space for rootfs and writable data" >&2
 		return 1
 	}

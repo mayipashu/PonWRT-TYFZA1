@@ -220,11 +220,22 @@ class StorageTests(unittest.TestCase):
         self.assertEqual(self.state['vols']['7']['ebs'], 265)
 
     def test_oversize_and_no_space_fail_before_mutation(self):
-        self.prepare_upgrade(size=33648641, success=False)
+        self.prepare_upgrade(size=100663297, success=False)
         self.assertEqual(self.state['events'], [])
         self.state['free'] = 0
         self.prepare_upgrade(size=24000000, success=False)
         self.assertEqual(self.state['events'], [])
+
+    def test_root_beyond_old_oem_slot_is_accepted(self):
+        # A migrated unit keeps a single slot, so an image larger than the old
+        # 33648640-byte OEM slot fits once the writable data volume leaves
+        # enough eraseblocks for it.
+        size = 33700000
+        self.assertGreater(size, 33648640)
+        self.state['vols']['11'] = dict(name='rootfs_data', ebs=133, used=0)
+        self.state['free'] -= 133
+        self.prepare_upgrade(size=size)
+        self.assertEqual(self.state['vols']['7']['ebs'], (size + LEB - 1) // LEB)
 
     def test_reserved_id_collision_fails_before_mutation(self):
         self.state['vols']['11'] = dict(name='factory_extra', ebs=1, used=0)
