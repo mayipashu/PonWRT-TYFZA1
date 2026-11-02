@@ -66,13 +66,23 @@ else
         --stock "${TYFZA1_STOCK_INPUTS:-$PROJECT/analysis/private/live-files}"
     python3 "$PROJECT/tools/prepare_wifi_runtime.py" "$TREE/files" --openwrt-tree "$TREE"
 fi
-# The world target hides per-package output in the default V=w mode, which
-# makes a single broken package look like a silent failure.  On failure,
-# rebuild the rtp2httpd package alone with full verbosity so the real error
-# is always visible in the build log.
-if ! make -j"$JOBS" world; then
-    echo "=== world build failed; retrying package/rtp2httpd verbosely ==="
-    make -j1 V=s package/rtp2httpd/compile 2>&1 | tail -120 || true
-    echo "=== end of rtp2httpd verbose log ==="
+# The default verbosity (V empty) redirects both stdout and stderr of every
+# package sub-make to /dev/null, so any failure degrades to a bare
+# "ERROR: ... failed to build." line.  V=w keeps stderr, which is where real
+# build errors are printed, without flooding the log like V=s would.
+if ! make -j"$JOBS" V=w world; then
+    echo "=== world build failed; collecting verbose diagnostics ==="
+    echo "--- apk package state ---"
+    ls -1 "$TREE"/bin/packages/*/base/*.apk 2>/dev/null | tail -10 || true
+    wc -c "$TREE"/bin/packages/*/base/packages.adb 2>/dev/null || true
+    echo "--- install list (first 40 entries) ---"
+    tr ' ' '\n' < "$TREE"/tmp/apk_install_list 2>/dev/null | head -40 || true
+    echo "--- package/compile (verbose, tail) ---"
+    make -j1 V=s package/compile 2>&1 | tail -60 || true
+    echo "--- package/install (verbose, tail) ---"
+    make -j1 V=s package/install 2>&1 | tail -180 || true
+    echo "--- package/rtp2httpd/compile (verbose, tail) ---"
+    make -j1 V=s package/rtp2httpd/compile 2>&1 | tail -60 || true
+    echo "=== end of verbose diagnostics ==="
     exit 1
 fi
