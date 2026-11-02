@@ -13,8 +13,6 @@ PKG_SOURCE:=rtp2httpd-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/mayipashu/rtp2httpd/tar.gz/d7cc99a?
 PKG_HASH:=9d6e524f427813f91f4badf8d3c2b07138533c9805b1cd598d3530e0fa42daaa
 
-PKG_FIXUP:=cmake
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/rtp2httpd
@@ -32,9 +30,19 @@ define Package/rtp2httpd/description
   incoming RTP data to HTTP stream.
 endef
 
-CMAKE_OPTIONS += \
-	-DENABLE_AGGRESSIVE_OPT=ON \
-	-DLINK_RT=OFF
+define Build/Compile
+	mkdir -p $(PKG_INSTALL_DIR)/usr/bin
+	$(TARGET_CC) $(TARGET_CFLAGS) -std=c11 -D_GNU_SOURCE \
+		-DSYSCONFDIR='"/etc"' -DPACKAGE='"rtp2httpd"' -DVERSION='"$(PKG_VERSION)"' \
+		-O3 -fstack-protector-strong -D_FORTIFY_SOURCE=2 \
+		-I $(PKG_BUILD_DIR)/src \
+		-o $(PKG_INSTALL_DIR)/usr/bin/rtp2httpd \
+		$(filter-out %/poller_kqueue.c, $(wildcard $(PKG_BUILD_DIR)/src/*.c)) \
+		$(wildcard $(PKG_BUILD_DIR)/src/vendor/hashmap/*.c) \
+		$(wildcard $(PKG_BUILD_DIR)/src/vendor/md5/*.c) \
+		$(wildcard $(PKG_BUILD_DIR)/src/vendor/picohttpparser/*.c) \
+		-lpthread -lm
+endef
 
 define Package/rtp2httpd/conffiles
 /etc/config/rtp2httpd
