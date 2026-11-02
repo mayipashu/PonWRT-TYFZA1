@@ -1,12 +1,20 @@
 --- a/package/kernel/mac80211/Makefile
 +++ b/package/kernel/mac80211/Makefile
-@@ -105,8 +105,7 @@
+@@ -105,8 +105,15 @@
    DEPENDS+= +iw +!WIFI_SCRIPTS_UCODE:iwinfo +wifi-scripts +wireless-regdb +USE_RFKILL:kmod-rfkill
    ABI_VERSION:=$(PKG_VERSION)-$(PKG_RELEASE)
    FILES:= \
 -	$(PKG_BUILD_DIR)/compat/compat.ko \
 -	$(PKG_BUILD_DIR)/net/wireless/cfg80211.ko
 +	$(PKG_BUILD_DIR)/compat/compat.ko
++endef
++
++# cfg80211.ko is built inside the TYFZA1 kernel and shipped by
++# kmod-rtl-ax-ap, so do not install the backports copy here.  Keep
++# advertising the module name: kernel modules that depend on cfg80211
++# (e.g. batman-adv) verify their dependencies against this list.
++define Package/kmod-cfg80211/extra_provides
++	echo cfg80211.ko
  endef
  
  define KernelPackage/cfg80211/description
