@@ -1,35 +1,18 @@
-## v0.9.2-beta
+## v0.1.1
 
 ### 修复
 
 - 修复 FileBrowser 在 LuCI 中找不到的问题：`luci-app-filebrowser` 实际是
   luci feed 提供的「上传文件到路由器文件系统」小工具，与 FileBrowser 服务
-  （Go 守护进程，端口 8989）无关，且同名包无法覆盖
+  （Go 守护进程，端口 8989）无关
+- 从固件中移除该无用小工具（连同 40 个翻译文件），不再出现在
+  「系统 → File Browser」
 - 新增 `luci-app-filebrowser-service`：在 **服务 → FileBrowser** 提供
-  启用开关、端口、根目录、反向代理 Base URL、命令行开关与直达链接
-- FileBrowser 服务默认启用，开机自启（`/etc/config/filebrowser` 中 `enabled=1`）
-- 移除与 luci feed 冲突的本地 `luci-app-filebrowser`，消除
-  `Not overriding core package` 警告
-
-### 新增预装功能
-
-在 v0.9.0-beta 的 8 项功能基础上，新增：
-
-| 功能 | 包名 | 用途 |
-| --- | --- | --- |
-| Time Control | `luci-app-timecontrol`（集成于系统） | 按客户端 MAC 的上网时间管控（nftables 后端） |
-
-### 变更
-
-- 新增 Time Control 上网时间管控（3.4.4-r6），随固件预装（集成在根文件系统中）
-  - 基于 nftables，适配 firewall4；支持多 MAC、多时段、黑白名单
-  - 预置修复版：ACL 改为路径级 + `cgi-io` 授权（否则界面按钮无响应）
-  - 配置文件使用命名节 `timecontrol`，前后端读取同一 uci 节（否则模式设置不生效）
-  - 首次启动自动启用服务，`/etc/config/timecontrol` 随 sysupgrade 保留
-- 可选：如需规则切换时**立即断开**已建立的连接，可在路由器上手动安装
-  `conntrack` 工具（`apk add conntrack`，需能联网）；未安装时定时封禁/解封
-  仍然生效，只是既有连接会保持到自然超时
-- 其余预装功能、存储布局与 v0.9.0-beta 保持一致
+  启用开关、端口、根目录、反向代理 Base URL、Shell 命令开关与直达链接
+- FileBrowser 服务默认启用并开机自启
+- 修复 `luci-app-homeproxy` 与 sing-box 变体的 Kconfig 递归依赖
+  （`+sing-box` 改为普通运行依赖，避免 sing-box / sing-box-tiny 互相选择）
+- 其余 8 项预装功能与 v0.9.1-beta 保持一致
 
 ## v0.9.0-beta
 
