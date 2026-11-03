@@ -33,7 +33,20 @@ fi
 ln -sfn "$ARGON" "$TREE/package/luci-theme-argon"
 ./scripts/feeds update packages luci
 sh "$P/port/scripts/apply-luci-patches.sh" "$TREE"
-printf '%s\n' "$PACKAGES" | xargs ./scripts/feeds install cgi-io luasrcdiet luci
+# Packages that only exist under package/ in this project are not in any feed;
+# passing them to "feeds install" just prints "No feed for package '...'".
+# The normal package/ scan picks them up, so filter them out here.
+filtered=''
+for pkg in $PACKAGES; do
+    case "$pkg" in
+        luci-app-filebrowser-service|luci-app-easytier|luci-app-mesh|\
+        luci-app-rtp2httpd|luci-app-syncthing|luci-app-tyfza1-pon|\
+        luci-app-filebrowser|luci-app-easytier)
+            continue ;;
+    esac
+    filtered="$filtered $pkg"
+done
+printf '%s\n' "$filtered" | xargs ./scripts/feeds install cgi-io luasrcdiet luci
 # Existing build trees retain .config; select the new default there as well.
 sed -i '/^CONFIG_PACKAGE_luci-theme-argon=/d; /^# CONFIG_PACKAGE_luci-theme-argon is not set$/d; /^CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=/d; /^# CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn is not set$/d' .config
 printf '%s\n' 'CONFIG_PACKAGE_luci-theme-argon=y' 'CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=y' >> .config
