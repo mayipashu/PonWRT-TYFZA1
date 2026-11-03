@@ -25,7 +25,12 @@ define Package/luci-app-timecontrol
   TITLE:=Internet time control (nftables, r6)
   URL:=https://github.com/sirpdboy/luci-app-timecontrol
   PKGARCH:=all
-  DEPENDS:=+luci-base +luci-compat +nftables +conntrack
+  # conntrack is deliberately not a hard dependency: the tool only makes the
+  # new rules take effect immediately by dropping already-established
+  # connections, and every caller checks for it first.  The feed package is
+  # not selectable in this pinned tree, while the scheduling itself only
+  # needs nft.
+  DEPENDS:=+luci-base +luci-compat +nftables
 endef
 
 define Package/luci-app-timecontrol/description
