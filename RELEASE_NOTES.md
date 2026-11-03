@@ -1,3 +1,22 @@
+## v0.1.2
+
+### 新增
+
+- **Lucky**：端口转发、DDNS、反向代理、WebDAV、内网穿透等一体化工具。
+  在 **服务 → Lucky** 提供控制面板与基础设置页面
+- **n2n**：P2P VPN（edge / supernode，ntop/n2n 3.0），配置见
+  `/etc/config/n2n`，无独立菜单
+- 常用命令行工具（无菜单）：`curl`、`jq`、`sshpass`、`tinc`、
+  `coreutils-timeout`
+
+### 修复
+
+- **Time Control 菜单改为中文**：服务菜单显示「时间控制」，子项为
+  「时间控制」「日志」
+- **Syncthing 菜单不显示**：`luci-app-syncthing` 的 Lua 控制器把页面挂在
+  `admin/nas` 下，而新版 LuCI 不再创建 NAS 顶级菜单，导致整页不可见。
+  已改为挂载到 **服务 → Syncthing**
+
 ## v0.1.1
 
 ### 修复

@@ -57,6 +57,16 @@ cp "$PORT/packages/version.mk" "$TREE/package/version.mk"
 mkdir -p "$TREE/package/luci-app-syncthing"
 rsync -a --delete "$PORT/packages/luci-app-syncthing/" "$TREE/package/luci-app-syncthing/"
 
+# n2n — peer-to-peer VPN (immortalwrt port, ntop/n2n v3.0)
+mkdir -p "$TREE/package/n2n"
+rsync -a --delete "$PORT/packages/n2n/" "$TREE/package/n2n/"
+
+# Lucky — prebuilt arm64 binary + LuCI app (sirpdboy)
+mkdir -p "$TREE/package/lucky"
+rsync -a --delete "$PORT/packages/lucky/" "$TREE/package/lucky/"
+mkdir -p "$TREE/package/luci-app-lucky"
+rsync -a --delete "$PORT/packages/luci-app-lucky/" "$TREE/package/luci-app-lucky/"
+
 # hostapd patches apply to its unpacked source, not the OpenWrt tree root.
 cp "$PORT/host-patches/471-hostapd-acs-no-survey.patch" \
     "$TREE/package/network/services/hostapd/patches/471-hostapd-acs-no-survey.patch"

@@ -6,11 +6,14 @@ function index()
 		return
 	end
 	
-	local page = entry({"admin", "nas", "syncthing"}, cbi("syncthing"), _("Syncthing"))
+	-- Register under Services instead of the NAS top level: the modern LuCI
+	-- menu no longer creates the "admin/nas" node, so the original entry
+	-- never became visible.
+	local page = entry({"admin", "services", "syncthing"}, cbi("syncthing"), _("Syncthing"))
 	page.order = 10
 	page.dependent = true
 	page.acl_depends = { "luci-app-syncthing" }
-	entry({"admin","nas","syncthing","status"},call("act_status")).leaf=true
+	entry({"admin","services","syncthing","status"},call("act_status")).leaf=true
 end
 
 function act_status()

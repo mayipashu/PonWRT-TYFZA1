@@ -41,7 +41,7 @@ for pkg in $PACKAGES; do
     case "$pkg" in
         luci-app-filebrowser-service|luci-app-easytier|luci-app-mesh|\
         luci-app-rtp2httpd|luci-app-syncthing|luci-app-tyfza1-pon|\
-        luci-app-filebrowser|luci-app-easytier)
+        luci-app-filebrowser|luci-app-lucky|lucky|n2n)
             continue ;;
     esac
     filtered="$filtered $pkg"
