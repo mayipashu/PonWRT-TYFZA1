@@ -9,6 +9,10 @@ EOF
 
 [ -s /etc/config/timecontrol ] ||  echo "config timecontrol" > /etc/config/timecontrol
 
+# The app ships as part of base-files, so no package postinst ran: start it
+# ourselves and refresh rpcd/LuCI so the menu appears immediately.
+[ -x /etc/init.d/timecontrol ] && /etc/init.d/timecontrol enable
+
 /etc/init.d/rpcd restart
 rm -f /tmp/luci-indexcache
 exit 0

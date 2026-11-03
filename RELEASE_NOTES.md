@@ -6,14 +6,15 @@
 
 | 功能 | 包名 | 用途 |
 | --- | --- | --- |
-| Time Control | `luci-app-timecontrol` | 按客户端 MAC 的上网时间管控（nftables 后端） |
+| Time Control | `luci-app-timecontrol`（集成于系统） | 按客户端 MAC 的上网时间管控（nftables 后端） |
 
 ### 变更
 
-- 新增 Time Control 上网时间管控（3.4.4-r6），随固件预装
+- 新增 Time Control 上网时间管控（3.4.4-r6），随固件预装（集成在根文件系统中）
   - 基于 nftables，适配 firewall4；支持多 MAC、多时段、黑白名单
   - 预置修复版：ACL 改为路径级 + `cgi-io` 授权（否则界面按钮无响应）
   - 配置文件使用命名节 `timecontrol`，前后端读取同一 uci 节（否则模式设置不生效）
+  - 首次启动自动启用服务，`/etc/config/timecontrol` 随 sysupgrade 保留
 - 可选：如需规则切换时**立即断开**已建立的连接，可在路由器上手动安装
   `conntrack` 工具（`apk add conntrack`，需能联网）；未安装时定时封禁/解封
   仍然生效，只是既有连接会保持到自然超时
