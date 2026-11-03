@@ -1,4 +1,15 @@
-## v0.9.1-beta
+## v0.9.2-beta
+
+### 修复
+
+- 修复 FileBrowser 在 LuCI 中找不到的问题：`luci-app-filebrowser` 实际是
+  luci feed 提供的「上传文件到路由器文件系统」小工具，与 FileBrowser 服务
+  （Go 守护进程，端口 8989）无关，且同名包无法覆盖
+- 新增 `luci-app-filebrowser-service`：在 **服务 → FileBrowser** 提供
+  启用开关、端口、根目录、反向代理 Base URL、命令行开关与直达链接
+- FileBrowser 服务默认启用，开机自启（`/etc/config/filebrowser` 中 `enabled=1`）
+- 移除与 luci feed 冲突的本地 `luci-app-filebrowser`，消除
+  `Not overriding core package` 警告
 
 ### 新增预装功能
 

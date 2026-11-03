@@ -1,0 +1,14 @@
+{
+	"luci-app-filebrowser-service": {
+		"description": "Grant access to the FileBrowser service settings",
+		"read": {
+			"file": {
+				"/usr/bin/filebrowser": [ "read" ]
+			},
+			"uci": [ "filebrowser" ]
+		},
+		"write": {
+			"uci": [ "filebrowser" ]
+		}
+	}
+}

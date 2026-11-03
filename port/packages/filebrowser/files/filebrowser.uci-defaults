@@ -1,0 +1,5 @@
+#!/bin/sh
+# FileBrowser ships enabled by default; create the rc.d symlink so it starts
+# on boot even though this package is not installed by apk with a postinst.
+[ -x /etc/init.d/filebrowser ] && /etc/init.d/filebrowser enable
+exit 0

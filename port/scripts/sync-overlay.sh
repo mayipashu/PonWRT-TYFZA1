@@ -38,8 +38,12 @@ rsync -a --delete "$PORT/packages/luci-app-mesh/" "$TREE/package/luci-app-mesh/"
 # FileBrowser — prebuilt arm64 v2.43.0
 mkdir -p "$TREE/package/filebrowser"
 rsync -a --delete "$PORT/packages/filebrowser/" "$TREE/package/filebrowser/"
-mkdir -p "$TREE/package/luci-app-filebrowser"
-rsync -a --delete "$PORT/packages/luci-app-filebrowser/" "$TREE/package/luci-app-filebrowser/"
+# NOTE: package/luci-app-filebrowser is NOT synced from here.  The luci feed
+# already defines that name (an upload widget for the router filesystem), and
+# a local copy only triggers "Not overriding core package".  The real service
+# UI lives in luci-app-filebrowser-service below.
+mkdir -p "$TREE/package/luci-app-filebrowser-service"
+rsync -a --delete "$PORT/packages/luci-app-filebrowser-service/" "$TREE/package/luci-app-filebrowser-service/"
 
 # EasyTier — mesh VPN, prebuilt aarch64 v2.7.0
 mkdir -p "$TREE/package/easytier"

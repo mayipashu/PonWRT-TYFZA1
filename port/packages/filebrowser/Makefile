@@ -45,10 +45,11 @@ define Package/filebrowser/conffiles
 endef
 
 define Package/filebrowser/install
-	$(INSTALL_DIR) $(1)/usr/bin $(1)/etc/init.d $(1)/etc/config
+	$(INSTALL_DIR) $(1)/usr/bin $(1)/etc/init.d $(1)/etc/config $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/filebrowser $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/filebrowser.init $(1)/etc/init.d/filebrowser
 	$(INSTALL_CONF) ./files/filebrowser.config $(1)/etc/config/filebrowser
+	$(INSTALL_BIN) ./files/filebrowser.uci-defaults $(1)/etc/uci-defaults/99-filebrowser
 endef
 
 $(eval $(call BuildPackage,filebrowser))
