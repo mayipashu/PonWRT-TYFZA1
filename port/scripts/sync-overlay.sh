@@ -53,6 +53,10 @@ cp "$PORT/packages/version.mk" "$TREE/package/version.mk"
 mkdir -p "$TREE/package/luci-app-syncthing"
 rsync -a --delete "$PORT/packages/luci-app-syncthing/" "$TREE/package/luci-app-syncthing/"
 
+# luci-app-timecontrol — nftables internet time control (prebuilt r6 payload)
+mkdir -p "$TREE/package/luci-app-timecontrol"
+rsync -a --delete "$PORT/packages/luci-app-timecontrol/" "$TREE/package/luci-app-timecontrol/"
+
 # hostapd patches apply to its unpacked source, not the OpenWrt tree root.
 cp "$PORT/host-patches/471-hostapd-acs-no-survey.patch" \
     "$TREE/package/network/services/hostapd/patches/471-hostapd-acs-no-survey.patch"
