@@ -1,4 +1,4 @@
-## v0.1.2
+## v0.1.3
 
 ### 新增
 
@@ -16,6 +16,9 @@
 - **Syncthing 菜单不显示**：`luci-app-syncthing` 的 Lua 控制器把页面挂在
   `admin/nas` 下，而新版 LuCI 不再创建 NAS 顶级菜单，导致整页不可见。
   已改为挂载到 **服务 → Syncthing**
+- **Lucky 打包失败（v0.1.2 构建错误）**：上游 tarball 的文件直接位于压缩包
+  根目录而非 `lucky-2.27.2/` 子目录，OpenWrt 默认的解包会剥掉一层路径，
+  导致二进制丢失。已在 `Build/Prepare` 中显式解包，不再剥路径
 
 ## v0.1.1
 

@@ -47,6 +47,16 @@ define Package/$(PKG_NAME)/conffiles
 /etc/lucky/*
 endef
 
+# The upstream tarball keeps its payload (lucky, LICENSE, scripts/*) at the
+# archive root instead of a lucky-$(PKG_VERSION)/ directory, so the default
+# PKG_UNPACK -- which strips one path component -- silently drops every
+# file, including the binary. Extract explicitly without stripping.
+define Build/Prepare
+	rm -rf $(PKG_BUILD_DIR)
+	mkdir -p $(PKG_BUILD_DIR)
+	tar -xzf $(DL_DIR)/$(PKG_SOURCE) -C $(PKG_BUILD_DIR) --no-same-owner
+endef
+
 define Build/Compile
 	true
 endef
