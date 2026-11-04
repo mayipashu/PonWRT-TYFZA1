@@ -1,30 +1,33 @@
 ## v0.1.3
 
-### 新增
+面向天翼 TYFZA1（rtl9617c，aarch64）的路由器固件。LuCI「服务」菜单与命令行
+提供以下功能：
 
-- **Lucky**：端口转发、DDNS、反向代理、WebDAV、内网穿透等一体化工具。
-  在 **服务 → Lucky** 提供控制面板与基础设置页面
-- **n2n**：P2P VPN（edge / supernode，ntop/n2n 3.0），配置见
-  `/etc/config/n2n`，无独立菜单
-- 常用命令行工具（无菜单）：`curl`、`jq`、`sshpass`、`tinc`、
-  `coreutils-timeout`
+### 服务菜单
 
-### 修复
+- **时间控制**：按计划自动执行拨号、重启、开关无线网络等任务，含日志页
+- **Lucky**：DDNS、IPv4/IPv6 端口转发、反向代理、ACME 证书、WebDAV、
+  内网穿透、IoT 网络唤醒等一体化工具，提供控制面板与设置页
+- **Syncthing**：设备间 P2P 文件同步
+- **FileBrowser**：网页文件管理器（默认端口 8989），支持上传下载、
+  在线终端与反向代理 Base URL 设置
+- **HomeProxy**：sing-box 代理客户端，策略组、订阅与分流配置
+- **FRPC**：frp 内网穿透客户端
+- **Samba4**：Windows 网络文件共享
+- **EasyTier**：去中心化 Mesh VPN，异地组网
+- **Mesh 网络**：IEEE 802.11s / batman-adv 无线组网管理
+- **RTP/Web 视频**：rtp2httpd，把 RTSP 摄像头流转为 HTTP MJPEG 网页
 
-- **Time Control 菜单改为中文**：服务菜单显示「时间控制」，子项为
-  「时间控制」「日志」
-- **Syncthing 菜单不显示**：`luci-app-syncthing` 的 Lua 控制器把页面挂在
-  `admin/nas` 下，而新版 LuCI 不再创建 NAS 顶级菜单，导致整页不可见。
-  已改为挂载到 **服务 → Syncthing**
-- **Lucky 打包失败（v0.1.2 构建错误）**：上游 tarball 的文件直接位于压缩包
-  根目录而非 `lucky-2.27.2/` 子目录，OpenWrt 默认的解包会剥掉一层路径，
-  导致二进制丢失。已在 `Build/Prepare` 中显式解包，不再剥路径
-- **n2n 构建失败（v0.1.3 前两次构建错误）**：其一，n2n 3.0 的 CMakeLists
-  仍要求 CMake 2.6 以上，构建机上的 CMake 4 彻底移除旧版兼容而直接报错，
-  已按官方逃生口追加 `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`；其二，其 CMake
-  打开 zstd 时只定义 `N2N_HAVE_ZSTD`，而头文件按 autotools 时代的
-  `HAVE_LIBZSTD` 决定是否 `#include <zstd.h>`，导致 `ZSTD_*` 调用全部隐式
-  声明报错。已以补丁同时定义两个宏
+### 命令行工具（无菜单）
+
+- **n2n**：P2P VPN（edge / supernode，3.0），配置见 `/etc/config/n2n`
+- **tinc**：全网状 VPN，配置见 `/etc/tinc`
+- **curl / jq / sshpass / timeout**（coreutils-timeout）
+
+### VPN 与网络
+
+- 内置 OpenVPN、WireGuard、zram 交换与常用诊断工具（iperf3、
+  ethtool、tcpdump、lsof 等）
 
 ## v0.1.1
 
