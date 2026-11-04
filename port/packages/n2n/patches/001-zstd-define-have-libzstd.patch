@@ -1,0 +1,13 @@
+--- n2n-3.0/CMakeLists.txt	2026-11-04 13:23:31.526691126 +0800
++++ n2n-3.0/CMakeLists.txt	2026-11-04 13:23:31.539544059 +0800
+@@ -78,6 +78,10 @@
+ 
+ if(N2N_OPTION_USE_ZSTD)
+   add_definitions(-DN2N_HAVE_ZSTD)
++  # n2n.h gates `#include <zstd.h>` on the autotools-era HAVE_LIBZSTD spelling
++  # while this build only defined N2N_HAVE_ZSTD, leaving the ZSTD_* calls
++  # implicitly declared (a hard error on modern compilers). Define both.
++  add_definitions(-DHAVE_LIBZSTD)
+ endif(N2N_OPTION_USE_ZSTD)
+ 
+ if(NOT DEFINED CMAKE_BUILD_TYPE)
