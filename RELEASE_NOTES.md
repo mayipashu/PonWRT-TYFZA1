@@ -19,6 +19,9 @@
 - **Lucky 打包失败（v0.1.2 构建错误）**：上游 tarball 的文件直接位于压缩包
   根目录而非 `lucky-2.27.2/` 子目录，OpenWrt 默认的解包会剥掉一层路径，
   导致二进制丢失。已在 `Build/Prepare` 中显式解包，不再剥路径
+- **n2n 配置失败（v0.1.3 首次构建错误）**：n2n 3.0 的 CMakeLists 仍要求
+  CMake 2.8 以上，构建机上的 CMake 4 已彻底移除旧版兼容而直接报错。已按
+  官方逃生口追加 `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`
 
 ## v0.1.1
 

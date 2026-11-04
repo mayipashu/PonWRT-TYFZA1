@@ -41,8 +41,12 @@ endef
 
 # n2n-utils is not shipped, so pcap is not needed and must stay off:
 # with it on, the build would require the libpcap headers.
+# The 3.0 release still asks for CMake < 3.5 compatibility, which CMake >= 4
+# on the runner rejects outright; CMAKE_POLICY_VERSION_MINIMUM is the official
+# escape hatch that reinterprets the old floor as 3.5.
 CMAKE_OPTIONS+= \
 	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 	-DN2N_OPTION_USE_PTHREAD=ON \
 	-DN2N_OPTION_USE_OPENSSL=ON \
 	-DN2N_OPTION_USE_PCAPLIB=OFF \
