@@ -1,3 +1,46 @@
+## v0.8.5-beta.1
+
+本版基于上游 [LeoooChen/PonWRT-TYFZA1](https://github.com/LeoooChen/PonWRT-TYFZA1)
+v0.8.5-beta，保留本仓库原有的预装功能栈。
+
+### 上游 v0.8.5-beta
+
+- 新增 Client / STA 模式，支持连接上级 Wi-Fi，并可配合另一频段组成无线中继。
+- 新增 802.11s Mesh 组网支持。无线中继与 Mesh 仍需进一步实机验证。
+- 修复多处 Wi-Fi 收发、聚合和硬件加速问题，改善无线启停、休眠唤醒及重连时的稳定性。
+- 修复硬件流量卸载、流表清理及缓冲回收中的多处异常。
+- 修复无线扫描可能卡住管理页面的问题，扫描结果按信号强弱排序。
+- 修复软件包安装、升级时日志显示异常及操作超时的问题。
+- 修复默认时区不正确的问题，默认使用北京时间，保留用户自定义时区。
+- 增加部分 2.5G 生产批次使用的 DS35Q2GBS、FM25G02D NAND 支持；相关批次的实机兼容性仍待验证。
+- 已知问题：Wi-Fi 上下行吞吐仍存在问题，后续继续修复。
+
+### 内核与驱动
+
+- `CONFIG_MAC80211_MESH=y`：内核层启用 802.11s，与上游一致。
+- 合并上游 `133-rpcd-async-scan.patch`，扫描不再阻塞管理页面。
+
+### 预装功能（本仓库）
+
+面向天翼 TYFZA1（rtl9617c，aarch64）的路由器固件。LuCI「服务」菜单与命令行
+提供以下功能：
+
+- **时间控制**：按设定的时间段控制接入设备的入网时间，可允许或禁止
+  指定设备（MAC）在指定时段上网，含日志页
+- **Lucky**：DDNS、IPv4/IPv6 端口转发、反向代理、ACME 证书、WebDAV、
+  内网穿透、IoT 网络唤醒等一体化工具，提供控制面板与设置页
+- **Syncthing**：设备间 P2P 文件同步
+- **FileBrowser**：网页文件管理器（默认端口 8989），支持上传下载、
+  在线终端与反向代理 Base URL 设置
+- **HomeProxy**：sing-box 代理客户端，策略组、订阅与分流配置
+- **FRPC**：frp 内网穿透客户端
+- **Samba4**：Windows 网络文件共享
+- **EasyTier**：去中心化 Mesh VPN，异地组网
+- **Mesh 网络**：IEEE 802.11s / batman-adv 无线组网管理
+- **RTP/Web 视频**：rtp2httpd，把 RTSP 摄像头流转为 HTTP MJPEG 网页
+
+命令行工具（无菜单）：n2n、tinc、curl / jq / sshpass / timeout。
+
 ## v0.1.3
 
 面向天翼 TYFZA1（rtl9617c，aarch64）的路由器固件。LuCI「服务」菜单与命令行
@@ -75,6 +118,7 @@
 - 新增 Mesh 组网管理界面（batman-adv + 802.11k/v 漫游引导）
 - 新增 ucode-mod-digest 模块支持（HomeProxy 依赖）
 - 更新预装依赖配置，涵盖所有新增功能的运行时依赖
+
 
 ## v0.8.4-beta
 
