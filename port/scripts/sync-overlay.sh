@@ -61,11 +61,21 @@ rsync -a --delete "$PORT/packages/luci-app-syncthing/" "$TREE/package/luci-app-s
 mkdir -p "$TREE/package/n2n"
 rsync -a --delete "$PORT/packages/n2n/" "$TREE/package/n2n/"
 
-# Lucky — prebuilt arm64 binary + LuCI app (sirpdboy)
+# Lucky — prebuilt arm64 binary (sirpdboy)
 mkdir -p "$TREE/package/lucky"
 rsync -a --delete "$PORT/packages/lucky/" "$TREE/package/lucky/"
-mkdir -p "$TREE/package/luci-app-lucky"
-rsync -a --delete "$PORT/packages/luci-app-lucky/" "$TREE/package/luci-app-lucky/"
+# The LuCI front end is NOT shipped as a package.  It is a JS-only app
+# (htdocs/ + root/, no luasrc/), and this tree copies packages into package/
+# before scripts/feeds runs while prepare_luci_feeds.sh filters it out of
+# "feeds install".  Under both BuildPackage and luci.mk the package silently
+# dropped out of "make world" -- no error, no menu:
+#
+#   make[1] world            <- luci-app-lucky absent from the target list
+#
+# Its menu, ACL, rpcd ucode handler, views and zh-cn catalog are shipped
+# through the base-files overlay instead, the same path that already carries
+# luci-app-timecontrol's menu and ACL into the image.  Sources stay in
+# port/packages/luci-app-lucky for reference and for the po2lmo build step.
 
 # hostapd patches apply to its unpacked source, not the OpenWrt tree root.
 cp "$PORT/host-patches/471-hostapd-acs-no-survey.patch" \
