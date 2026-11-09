@@ -1,3 +1,17 @@
+## v0.8.5-beta.2
+
+- 修复 Lucky 在 LuCI 中没有入口的问题。`luci-app-lucky` 之前用
+  `BuildPackage` 声明 `+luci-base +luci-compat`，而 `sync-overlay.sh` 在
+  `scripts/feeds` 之前就把包放进 `package/`，依赖扫描解析不到这两个
+  feed 包名，包被 `make world` 静默丢弃：lucky 守护进程装上了
+  （`rc.d/S99lucky` 存在），但 `menu.d`、`acl.d`、rpcd ucode 处理脚本和
+  两个视图都没有进镜像。改用 `feeds/luci/luci.mk`（与
+  luci-app-easytier / syncthing / rtp2httpd / tyfza1-pon 一致）后，
+  菜单、ACL、ucode 和视图随包安装，并从 `po/zh_Hans` 自动生成
+  `luci-i18n-lucky-zh-cn`。
+- 该问题在 v0.1.3 中已存在，不是 v0.8.5 合并引入的回归。
+- 其余内容与 v0.8.5-beta.1 相同。
+
 ## v0.8.5-beta.1
 
 本版基于上游 [LeoooChen/PonWRT-TYFZA1](https://github.com/LeoooChen/PonWRT-TYFZA1)
