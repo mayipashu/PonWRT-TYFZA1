@@ -1,3 +1,18 @@
+## v0.8.5-beta.3
+
+- 真正修复 Lucky 在 LuCI 中没有入口的问题。前两次尝试都没成功：
+  v0.8.5-beta.1 用 `BuildPackage` 显式定义包，v0.8.5-beta.2 改用
+  `feeds/luci/luci.mk`，两次构建日志里 `make[1] world` 的目标列表都
+  **完全没有** `luci-app-lucky`——包被静默丢弃，既不报错也不进镜像。
+  守护进程装上了（`rc.d/S99lucky`），但 `menu.d`、`acl.d`、rpcd ucode
+  处理脚本和两个视图都没有，LuCI 里看不到 Lucky。
+- 本版改为通过 target `base-files` overlay 投放界面文件，与
+  `luci-app-timecontrol` 走同一条路径（该机制已在固件中验证有效）：
+  菜单、ACL、ucode 后端、控制面板与基础设置两个视图，以及用 `po2lmo`
+  编译的中文翻译 `lucky.zh-cn.lmo`。
+- 该缺陷在 v0.1.3 中已存在，不是 v0.8.5 合并引入的回归。
+- 其余内容与 v0.8.5-beta.1 相同（802.11s Mesh、STA 模式、预装功能栈）。
+
 ## v0.8.5-beta.2
 
 - 修复 Lucky 在 LuCI 中没有入口的问题。`luci-app-lucky` 之前用
